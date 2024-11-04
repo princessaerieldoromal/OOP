@@ -9,7 +9,7 @@ conn=sqlite3.connect ('Personal_info.db')
 c=conn.cursor()
 
 def submit():
-    conn=sqlite3.connect('C:/Users/STUDENTS.DESKTOP-G4BV2BC/Documents/Personal_info.db')
+    conn=sqlite3.connect('C:/doromal. OOP/Personal_info.db')
 
     c=conn.cursor()
 
@@ -29,22 +29,31 @@ def submit():
     age.delete (0,END)
     address.delete (0,END)
     email.delete (0,END)
-
+                     
 def query():
-        conn=sqlite3.connect('C:/Users/STUDENTS.DESKTOP-G4BV2BC/Documents/Personal_info.db')
-        c=conn.cursor()
-        c.execute("SELECT *,oid FROM Student_info")
-        records=c.fetchall()
+    conn=sqlite3.connect('C:/doromal. OOP/Personal_info.db')
+    c=conn.cursor()
+    c.execute("SELECT *,oid FROM Student_info")
+    records=c.fetchall()
 
-        print_records=''
-        for record in records:
+    print_records=''
+    for record in records:
             print_records+=str(record[0])+" "+str(record[1])+" "+str(record[2])+" "+str(record[3])+" "+(record[4])+" "+"\t"+str(record[5])+"\n"
             query_label=Label(root,text=print_records)
             query_label.grid(row=30,column=0,columnspan=2)
 
-        conn.commit()
-        conn.close()
-                                                   
+    conn.commit()
+    conn.close()
+
+def delete():
+    conn=sqlite3.connect('C:/doromal. OOP/Personal_info.db')
+    c=conn.cursor()
+    c.execute("DELETE from Student_info WHERE oid="+delete_box.get())
+
+    conn.commit()
+    conn.close()
+
+                              
                                                     
 '''
 c.execute("""CREATE TABLE "Student_info" (
@@ -83,6 +92,14 @@ submit_btn.grid(row=6,column=0,columnspan=2, pady=10, padx=10, ipadx=100)
 
 query_btn=Button(root,text= "Show records",command=query)
 query_btn.grid (row=7,column=0,columnspan=2, pady=10, padx=10, ipadx=137)
+
+query_btn=Button(root,text= "Delete Record",command=delete)
+query_btn.grid (row=12,column=0,columnspan=2, pady=10, padx=10, ipadx=136)
+
+delete_box=Entry(root,width=30)
+delete_box.grid(row=10,column=1,padx=30)
+delete_box_label=Label(root,text= "Select ID.No")
+delete_box_label.grid(row=10,column=0)                
                   
 root.mainloop()
 
