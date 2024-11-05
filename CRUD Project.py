@@ -48,12 +48,48 @@ def query():
 def delete():
     conn=sqlite3.connect('C:/doromal. OOP/Personal_info.db')
     c=conn.cursor()
-    c.execute("DELETE from Student_info WHERE oid="+delete_box.get())
+    c.execute("DELETE from Student_info WHERE oid=" +delete_box.get())
 
     conn.commit()
     conn.close()
 
-                              
+def edit():
+    editor=Tk()
+    editor.title('Update Record from database')
+    editor.geometry("500x500")
+
+    conn=sqlite3.connect('C:/doromal. OOP/Personal_info.db')
+    c=conn.cursor()
+
+    record_id=delete_box.get()
+    c.execute("SELECT * FROM Student_info WHERE oid=" +record_id)
+    records=c.fetchall()
+
+    for record in records:
+        f_name_editor.insert(0,record[0])
+        l_name_editor.insert(0,record[1])
+        age_editor.insert(0,record[2])
+        address_editor.insert(0,record[3])
+        email_editor.insert(0,record[4])
+
+    print_records=''
+    for record in records:
+        print_records+=str(record[0])+" "+str(record[1])+" "+str(record[2])+" "+str(record[3])+" "+(record[4])+" "+"\t"+str(record[5])+"\n"
+
+        f_name_editor=Entry(editor,width=30)
+        f_name_editor.grid(row=0, column=1,padx=20,pady=(10,0))
+        l_name_editor=Entry(editor,width=30)
+        l_name_editor.grid(row=1, column=1,padx=20)
+        age_editor=Entry(editor,width=30)
+        age_editor.grid(row=2, column=1,padx=20)
+        address_editor=Entry(editor,width=30)
+        address_editor.grid(row=3, column=1,padx=20)
+        email_editor=Entry(editor,width=30)
+        email_editor.grid(row=4, column=1,padx=20)
+
+        conn.commit()
+        conn.close()
+                         
                                                     
 '''
 c.execute("""CREATE TABLE "Student_info" (
@@ -93,14 +129,19 @@ submit_btn.grid(row=6,column=0,columnspan=2, pady=10, padx=10, ipadx=100)
 query_btn=Button(root,text= "Show records",command=query)
 query_btn.grid (row=7,column=0,columnspan=2, pady=10, padx=10, ipadx=137)
 
-query_btn=Button(root,text= "Delete Record",command=delete)
-query_btn.grid (row=12,column=0,columnspan=2, pady=10, padx=10, ipadx=136)
-
 delete_box=Entry(root,width=30)
 delete_box.grid(row=10,column=1,padx=30)
+
 delete_box_label=Label(root,text= "Select ID.No")
-delete_box_label.grid(row=10,column=0)                
-                  
+delete_box_label.grid(row=10,column=0)
+
+query_btn=Button(root,text= "Delete Record",command=query)
+query_btn.grid (row=12,column=0,columnspan=2, pady=10, padx=10, ipadx=136)
+
+edit_btn=Button(root,text= "Edit Record",command=edit)
+edit_btn.grid(row=8,column=0,columnspan=2, pady=10, padx=10, ipadx=138)
+
+
 root.mainloop()
 
 
