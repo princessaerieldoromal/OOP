@@ -2,7 +2,7 @@ from tkinter import*
 import sqlite3
 
 root=Tk()
-root.title('CRUD Project')
+root.title('Student Information')
 root.geometry ("500x500")
 
 conn=sqlite3.connect ('Personal_info.db')
@@ -38,9 +38,9 @@ def query():
 
     print_records=''
     for record in records:
-            print_records+=str(record[0])+" "+str(record[1])+" "+str(record[2])+" "+str(record[3])+" "+(record[4])+" "+"\t"+str(record[5])+"\n"
-            query_label=Label(root,text=print_records)
-            query_label.grid(row=30,column=0,columnspan=2)
+        print_records+=str(record[0])+" "+str(record[1])+" "+str(record[2])+" "+str(record[3])+" "+(record[4])+" "+"\t"+str(record[5])+"\n"
+        query_label=Label(root,text=print_records)
+        query_label.grid(row=15,column=0,columnspan=2)
 
     conn.commit()
     conn.close()
@@ -50,9 +50,40 @@ def delete():
     c=conn.cursor()
     c.execute("DELETE from Student_info WHERE oid=" +delete_box.get())
 
+    delete_box.delete(0,END)
+
     conn.commit()
     conn.close()
 
+def update():
+    conn=sqlite3.connect('C:/doromal. OOP/Personal_info.db')
+    c=conn.cursor()
+
+    record_id=delete_box.get()
+    c.execute(""" UPDATE Student_info SET
+        f_name=:first,
+        l_name=:last,
+        age=:age,
+        address=:address,
+        email=:email
+
+        WHERE oid=:oid """,
+              {
+                  'first': f_name_editor.get(),
+                  'last': l_name_editor.get(),
+                  'age': age_editor.get(),
+                  'address': address_editor.get(),
+                  'email': email_editor.get(),
+                  'oid': record_id
+
+                  })
+
+   
+
+    conn.commit()
+    conn.close()
+
+    
 def edit():
     editor=Tk()
     editor.title('Update Record from database')
@@ -65,6 +96,35 @@ def edit():
     c.execute("SELECT * FROM Student_info WHERE oid=" +record_id)
     records=c.fetchall()
 
+    global f_name_editor
+    global l_name_editor
+    global age_editor
+    global address_editor
+    global email_editor
+
+    f_name_editor=Entry(editor,width=30)
+    f_name_editor.grid(row=0, column=1,padx=20,pady=(10,0))
+    l_name_editor=Entry(editor,width=30)
+    l_name_editor.grid(row=1, column=1,padx=20)
+    age_editor=Entry(editor,width=30)
+    age_editor.grid(row=2, column=1,padx=20)
+    address_editor=Entry(editor,width=30)
+    address_editor.grid(row=3, column=1,padx=20)
+    email_editor=Entry(editor,width=30)
+    email_editor.grid(row=4, column=1,padx=20)
+
+    f_name_label=Label(editor,text="First Name")
+    f_name_label.grid(row=0, column=0,pady=(10,0))
+    l_name_label=Label(editor,text="Last Name")
+    l_name_label.grid(row=1, column=0)
+    age_label=Label(editor,text="Age")
+    age_label.grid(row=2, column=0)
+    address_label=Label(editor,text="Address")
+    address_label.grid(row=3, column=0)
+    email_label=Label(editor,text="email")
+    email_label.grid(row=4, column=0)
+    
+
     for record in records:
         f_name_editor.insert(0,record[0])
         l_name_editor.insert(0,record[1])
@@ -72,23 +132,11 @@ def edit():
         address_editor.insert(0,record[3])
         email_editor.insert(0,record[4])
 
-    print_records=''
-    for record in records:
-        print_records+=str(record[0])+" "+str(record[1])+" "+str(record[2])+" "+str(record[3])+" "+(record[4])+" "+"\t"+str(record[5])+"\n"
-
-        f_name_editor=Entry(editor,width=30)
-        f_name_editor.grid(row=0, column=1,padx=20,pady=(10,0))
-        l_name_editor=Entry(editor,width=30)
-        l_name_editor.grid(row=1, column=1,padx=20)
-        age_editor=Entry(editor,width=30)
-        age_editor.grid(row=2, column=1,padx=20)
-        address_editor=Entry(editor,width=30)
-        address_editor.grid(row=3, column=1,padx=20)
-        email_editor=Entry(editor,width=30)
-        email_editor.grid(row=4, column=1,padx=20)
-
-        conn.commit()
-        conn.close()
+    save_btn=Button(editor,text= "Save Record",command=update)
+    save_btn.grid(row=10, column=0,columnspan=2,pady=10,padx=10,ipadx=140)
+ 
+    conn.commit()
+    conn.close()
                          
                                                     
 '''
@@ -129,17 +177,17 @@ submit_btn.grid(row=6,column=0,columnspan=2, pady=10, padx=10, ipadx=100)
 query_btn=Button(root,text= "Show records",command=query)
 query_btn.grid (row=7,column=0,columnspan=2, pady=10, padx=10, ipadx=137)
 
+query_btn=Button(root,text= "Delete Record",command=delete)
+query_btn.grid(row=12,column=0,columnspan=2, pady=10, padx=10, ipadx=136)
+
+update_btn=Button(root,text= "Edit Record",command=edit)
+update_btn.grid(row=8,column=0,columnspan=2, pady=10, padx=10, ipadx=138)
+
 delete_box=Entry(root,width=30)
 delete_box.grid(row=10,column=1,padx=30)
 
 delete_box_label=Label(root,text= "Select ID.No")
 delete_box_label.grid(row=10,column=0)
-
-query_btn=Button(root,text= "Delete Record",command=query)
-query_btn.grid (row=12,column=0,columnspan=2, pady=10, padx=10, ipadx=136)
-
-edit_btn=Button(root,text= "Edit Record",command=edit)
-edit_btn.grid(row=8,column=0,columnspan=2, pady=10, padx=10, ipadx=138)
 
 
 root.mainloop()
