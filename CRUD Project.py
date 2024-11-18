@@ -6,8 +6,8 @@ root.title('Student Information')
 root.geometry ("500x500")
 
 conn=sqlite3.connect ('Personal_info.db')
-c=conn.cursor()
-
+c=conn.cursor() 
+ 
 def submit():
     conn=sqlite3.connect('C:/doromal. OOP/Personal_info.db')
 
@@ -136,7 +136,8 @@ def edit():
     save_btn.grid(row=10, column=0,columnspan=2,pady=10,padx=10,ipadx=140)
  
     conn.commit()
-    conn.close()
+    conn.close() 
+
                          
                                                     
 '''
